@@ -1,0 +1,29 @@
+#tc-plugin-copyfield-tbody tr:first-child {
+  display: none;
+}
+#tc-plugin-enablefield-tbody tr:first-child {
+  display: none;
+}
+.kintoneplugin-table-td-label{
+  color:#3498db;
+  font-weight:bold;
+  font-size:35px;
+  text-align:center;
+}
+
+.tc-plugin-block{
+  margin: 10px 0px 10px 0px;
+  border: solid 1px #eee;
+  padding: 20px;
+}
+.tc-plugin-copyfromtable{
+  display:inline-block;
+  padding-right: 50px;
+}
+.tc-plugin-copytotable{
+  display: inline-block;
+}
+.kintoneplugin-alert{
+  display:none;
+  width:200px;
+}

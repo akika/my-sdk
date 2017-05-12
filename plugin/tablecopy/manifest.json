@@ -1,0 +1,41 @@
+{
+	"manifest_version": 1,
+	"version": 1,
+	"type": "APP",
+	"name": {
+		"ja": "アプリ間テーブルコピープラグイン",
+		"en": "copy between APPS plug-in",
+		"zh": "应用间表格复制插件"
+	},
+	"description": {
+		"ja": "lookup先アプリからデータをコピしてレコードを新規作成するプラグインです。",
+		"en": "It is plug-in which changes the color etc. of the item displayed according to conditions. ",
+		"zh": "本插件可从lookup所参照的应用中复制数据，并用此数据创建新记录。"
+	},
+	"icon": "image/icon.png",
+	"desktop": {
+		"js": [
+			"https://js.cybozu.com/momentjs/2.10.6/moment.min.js",
+			"https://js.cybozu.com/jquery/2.1.4/jquery.min.js",
+			"https://dl.dropboxusercontent.com/s/oecb7rirqdr6yp3/desktop.js"
+		],
+		"css": [
+		]
+	},
+	"config": {
+		"html": "html/config.html",
+		"js": [
+			"https://js.cybozu.com/jquery/2.1.4/jquery.min.js",
+			"https://js.cybozu.com/jqueryui/1.11.4/jquery-ui.min.js",
+			"https://js.cybozu.com/jsrender/0.9.83/jsrender.min.js",
+			"https://dl.dropboxusercontent.com/s/t5iuaqvfqld3uf8/config.js"
+		],
+		"css": [
+			"css/51-current-default.css",
+			"https://js.cybozu.com/jqueryui/1.11.4/themes/smoothness/jquery-ui.css",
+			"https://js.cybozu.com/font-awesome/v4.4.0/css/font-awesome.min.css",
+			"css/config.css"
+		],
+		"required_params": ["lookupField","copyFromTable","copyToTable"]
+	}
+}
