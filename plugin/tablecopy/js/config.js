@@ -24,7 +24,7 @@ jQuery.noConflict();
                     'tc_lookup_label': 'lookupフィールド指定',
                     'tc_disable_label': 'lookupコピー先フィールドの編集可否の設定',
                     'tc_disable_description': 'lookup設定画面の「ほかのフィールドのコピー」で指定したコピー先フィールドを編集可にします。',
-                    'tc_disable_field_title': 'フィールド',
+                    'tc_disable_field_title': 'フィールドコード',
                     'tc_disable_checkbox_title': '編集可にする',
                     'tc_disable_checkbox_text': '編集可にする',
                     'tc_tablefield_label': 'コピー元テーブルとコピー先テーブルの指定',
@@ -43,33 +43,33 @@ jQuery.noConflict();
                     'tc_lookup_label': 'Select lookup field',
                     'tc_disable_label': 'Enable field',
                     'tc_disable_description':
-                    'Enable the fields that was seleted from Field Mapping on Lookup Filed Setting.',
+                    'Seleted Mapping_Field that you want to set enable.',
                     'tc_disable_field_title': 'field',
                     'tc_disable_checkbox_title': 'Enable fields',
                     'tc_disable_checkbox_text': 'Enable fields',
-                    'tc_tablefield_label': 'Select tables to copy',
+                    'tc_tablefield_label': 'Copy to which table',
                     'tc_tablefield_from_title': 'From',
                     'tc_tablefield_to_title': 'To',
-                    'tc_copyfield_label': 'Select the field you want to copy from Table',
-                    'tc_copyfield_description': 'Select Mapping fields from From and To。',
+                    'tc_copyfield_label': 'Copy from  which Table',
+                    'tc_copyfield_description': 'Select which field to copy。',
                     'tc_copyfield_from_title': 'From',
                     'tc_copyfield_to_title': 'To',
                     'tc_submit': 'Save',
                     'tc_cancel': 'Cancel',
                     'tc_message': 'Must select!',
-                    'tc_caution': 'When option is changed,The next setting will be cleared！'
+                    'tc_caution': 'When option is changed,next setting will be cleared！'
                 },
                 'zh': {
                     'tc_lookup_label': '选择lookup字段',
                     'tc_disable_label': '设置复制目标字段编辑可否',
-                    'tc_disable_description': '设置lookup的“其他要复制的字段”中选择的复制目标字段是否可编辑',
-                    'tc_disable_field_title': '字段',
+                    'tc_disable_description': '请选择lookup设置页面的“其他要复制的字段”中设置的复制目标字段的字段代码',
+                    'tc_disable_field_title': '字段代码',
                     'tc_disable_checkbox_title': '设为可编辑',
                     'tc_disable_checkbox_text': '设为可编辑',
                     'tc_tablefield_label': '选择要从哪个表格复制到哪个表格',
                     'tc_tablefield_from_title': '复制来源表格',
                     'tc_tablefield_to_title': '复制目标表格',
-                    'tc_copyfield_label': '字段要复制的字段',
+                    'tc_copyfield_label': '设置要复制的字段',
                     'tc_copyfield_description': '分别指定要从哪个字段复制到哪个字段。',
                     'tc_copyfield_from_title': '复制来源字段',
                     'tc_copyfield_to_title': '复制目标字段',
@@ -602,7 +602,7 @@ jQuery.noConflict();
                         'enable_field': {
                             "1": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のフィールドは指定してください。",
                             "2": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のチェックボックスにチェックを入れてください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                            "3": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目が何も指定されていません。"
                         }
                     },
                     'en': {
@@ -620,15 +620,15 @@ jQuery.noConflict();
                     },
                     'zh': {
                         'copy_field': {
-                            "1": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
-                            "2": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
-                            "4": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                            "1": "[设置要复制的字段]的第" + row_num + "行未指定复制目标字段。",
+                            "2": "[设置要复制的字段]的第" + row_num + "行未指定复制来源字段。",
+                            "3": "[设置要复制的字段]的第" + row_num + "行的字段类型不一致。请重新选择。",
+                            "4": "[设置要复制的字段]的第" + row_num + "行未选择任何字段。"
                         },
                         'enable_field': {
-                            "1": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のフィールドは指定してください。",
-                            "2": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のチェックボックスにチェックを入れてください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                            "1": "[设置复制目标字段编辑可否]的第" + row_num + "行的字段未选择。",
+                            "2": "[设置复制目标字段编辑可否]的第" + row_num + "行的复选框未勾选い。",
+                            "3": "[设置复制目标字段编辑可否]的第" + row_num + "行未作内容设置。"
                         }
                     }
                 };
