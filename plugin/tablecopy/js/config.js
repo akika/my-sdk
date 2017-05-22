@@ -21,27 +21,31 @@ jQuery.noConflict();
 
             var terms = {
                 'ja': {
-                    'tc_lookup_label': 'lookupフィールド指定',
-                    'tc_disable_label': 'lookupコピー先フィールドの編集可否の設定',
+                    'tc_lookup_label': 'lookupフィールドの指定',
+                    'tc_changeEvent_label': 'コピー元レコード番号',
+                    'tc_changeEvent_description': '‘テーブルをコピーするには、lookup設定画面の「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。',
+                    'tc_disable_label': '編集可にするlookupコピー先フィールドの指定',
                     'tc_disable_description': 'lookup設定画面の「ほかのフィールドのコピー」で指定したコピー先フィールドを編集可にします。',
                     'tc_disable_field_title': 'フィールドコード',
-                    'tc_disable_checkbox_title': '編集可にする',
-                    'tc_disable_checkbox_text': '編集可にする',
                     'tc_tablefield_label': 'コピー元テーブルとコピー先テーブルの指定',
                     'tc_tablefield_from_title': 'コピー元テーブル',
                     'tc_tablefield_to_title': 'コピー先テーブル',
-                    'tc_copyfield_label': 'コピーするテーブルフィールドの指定',
-                    'tc_copyfield_description': 'コピー元テーブルとコピー先テーブルから、コピーしたいフィールドを指定してください。',
+                    'tc_copyfield_label': 'コピーを行うテーブル内のフィールドの指定',
+                    'tc_copyfield_description': 'コピー元テーブルとコピー先テーブルから、コピーを行うフィールドを指定してください。',
                     'tc_copyfield_from_title': 'コピー元フィールド',
                     'tc_copyfield_to_title': 'コピー先フィールド',
                     'tc_submit': '保存',
                     'tc_cancel': 'キャンセル',
                     'tc_message': '必須項目です',
-                    'tc_caution': '選択肢を変えるたびに、以下に一部の項目の設定が消えますのでご注意ください！'
+                    'tc_caution': '選択肢を切り替えるたびに、以下に一部の項目の設定が消えますのでご注意ください！',
+                    'tc_message_changeEventfield': 'lookupの「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。フォームの設定をご確認ください'
                 },
                 'en': {
                     'tc_lookup_label': 'Select lookup field',
                     'tc_disable_label': 'Enable field',
+                    'tc_changeEvent_label': 'コピー元レコード番号',
+                    'tc_changeEvent_description':
+                    'テーブルをコピーするには、lookuplookup設定画面の「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります',
                     'tc_disable_description':
                     'Seleted Mapping_Field that you want to set enable.',
                     'tc_disable_field_title': 'field',
@@ -57,15 +61,16 @@ jQuery.noConflict();
                     'tc_submit': 'Save',
                     'tc_cancel': 'Cancel',
                     'tc_message': 'Must select!',
-                    'tc_caution': 'When option is changed,next setting will be cleared！'
+                    'tc_caution': 'When option is changed,next setting will be cleared！',
+                    'tc_message_changeEventfield': 'Not find the record_number field in mapping field。'
                 },
                 'zh': {
                     'tc_lookup_label': '选择lookup字段',
-                    'tc_disable_label': '设置复制目标字段编辑可否',
+                    'tc_changeEvent_label': '复制来源的记录编号字段',
+                    'tc_changeEvent_description': '要复制表格，需要在lookup字段的设置页面的“其他要复制的字段”中指定复制来源的记录编号',
+                    'tc_disable_label': '选择要设置成可编辑的字段',
                     'tc_disable_description': '请选择lookup设置页面的“其他要复制的字段”中设置的复制目标字段的字段代码',
                     'tc_disable_field_title': '字段代码',
-                    'tc_disable_checkbox_title': '设为可编辑',
-                    'tc_disable_checkbox_text': '设为可编辑',
                     'tc_tablefield_label': '选择要从哪个表格复制到哪个表格',
                     'tc_tablefield_from_title': '复制来源表格',
                     'tc_tablefield_to_title': '复制目标表格',
@@ -76,7 +81,8 @@ jQuery.noConflict();
                     'tc_submit': '保存',
                     'tc_cancel': '取消',
                     'tc_message': '不能为空',
-                    'tc_caution': '请注意！当更改选项时，下面的部分设置将被清除。'
+                    'tc_caution': '请注意！当更改选项时，下面的部分设置将被清除。',
+                    'tc_message_changeEventfield': '需要在lookup的[其他要复制的字段]中指定复制来源的记录编号。请确认表单的设置'
                 }
             };
 
@@ -86,6 +92,7 @@ jQuery.noConflict();
             var configHtml = $('#tc-plugin').html();
             var tmpl = $.templates(configHtml);
             $('div#tc-plugin').html(tmpl.render({'terms': i18n}));
+            var thisAppId = kintone.app.getId();
 
 
             // escape fields vale
@@ -118,13 +125,13 @@ jQuery.noConflict();
                     $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column1")
                     .val(conf["enablefield_row" + tn]['column1']);
 
-                    if (conf["enablefield_row" + tn]['column2'] === true) {
-                        $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
-                        .prop("checked", true);
-                    } else {
-                        $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
-                        .prop("checked", false);
-                    }
+                    // if (conf["enablefield_row" + tn]['column2'] === true) {
+                        // $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
+                        // .prop("checked", true);
+                    // } else {
+                        // $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
+                        // .prop("checked", false);
+                    // }
                 }
             }
 
@@ -145,8 +152,10 @@ jQuery.noConflict();
 
             function setDefault() {
                 $('.lookupField').val(conf["lookupField"]);
+                $('#changeEventField').val(conf["changeEventField"]);
                 $('.copyFromTable').val(conf["copyFromTable"]);
                 $('.copyToTable').val(conf["copyToTable"]);
+
 
                 if (ENABLE_ROW_NUM > 0) {
                     setEnableTableDefault();
@@ -166,78 +175,27 @@ jQuery.noConflict();
 
 
 
-            function setLookupFieldDefault(resp) {
+            function setLookupAndCopyToTableDefault(resp) {
                 var fields = resp['properties'];
                 var $option = $("<option>");
                 for (var key in fields) {
                     if (!fields.hasOwnProperty(key)) {continue; }
                     var prop = fields[key];
-
                     // lookup Field
                     if (fields[key].hasOwnProperty("lookup")) {
                         $option.attr("value", escapeHtml(prop.code));
                         $option.text(escapeHtml(prop.label));
                         $('.lookupField').append($option.clone());
                     }
-                }
-            }
-
-            function setCopyToTableDefault(resp) {
-                var fields = resp['properties'];
-                var $option = $("<option>");
-                for (var key in fields) {
-                    if (!fields.hasOwnProperty(key)) {continue; }
-                    var prop = fields[key];
-                    switch (prop['type']) {
                     // current Table
-                        case "SUBTABLE":
-                            $option.attr("value", escapeHtml(prop.code));
-                            $option.text(escapeHtml(prop.code));
-                            $('.copyToTable').append($option.clone());
-                            break;
-                        default:
-                            break;
+                    if (prop['type'] === "SUBTABLE") {
+                        $option.attr("value", escapeHtml(prop.code));
+                        $option.text(escapeHtml(prop.code));
+                        $('.copyToTable').append($option.clone());
                     }
                 }
             }
 
-
-            function setCopyToFieldDefault(resp) {
-                var $option = $("<option>");
-                if (conf['copyToTable']) {
-                    var currentTable = conf['copyToTable'];
-                    var currentTableFields = resp.properties[currentTable].fields;
-                    for (var ct in currentTableFields) {
-                        if (!currentTableFields.hasOwnProperty(ct)) {continue; }
-                        var p = currentTableFields[ct];
-                        switch (p['type']) {
-                            case "SINGLE_LINE_TEXT":
-                            case "NUMBER":
-                            case "MULTI_LINE_TEXT":
-                            case "RICH_TEXT":
-                            case "CHECK_BOX":
-                            case "RADIO_BUTTON":
-                            case "DROP_DOWN":
-                            case "MULTI_SELECT":
-                            case "LINK":
-                            case "DATE":
-                            case "TIME":
-                            case "DATETIME":
-                            case "USER_SELECT":
-                            case "GROUP_SELECT":
-                            case "ORGANIZATION_SELECT":
-                                $option.attr("value", escapeHtml(p.code));
-                                $option.attr("name", escapeHtml(p.type));
-                                $option.text(escapeHtml(p.label));
-                                $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2')
-                                .append($option.clone());
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-            }
 
 
             function setMappingFieldDefult(resp) {
@@ -247,7 +205,8 @@ jQuery.noConflict();
                     if (!lookupMappingFields.hasOwnProperty(MappingKey)) {continue; }
                     var prop = lookupMappingFields[MappingKey];
                     var $option = $("<option>");
-                    if (prop.field !== "relatedRecNo") {
+                    var recNoField = conf["changeEventField"];
+                    if (prop.field !== recNoField) {
                         $option.attr("value", escapeHtml(prop.field));
                         $option.text(escapeHtml(prop.field));
                         $('#tc-plugin-enablefield-tbody > tr:eq(0) .tc-plugin-column1')
@@ -276,6 +235,46 @@ jQuery.noConflict();
                     }
                 }
             }
+
+
+
+            function setCopyToFieldDefault(resp) {
+                var $option = $("<option>");
+                if (!conf['copyToTable']) {return; }
+                var currentTable = conf['copyToTable'];
+                var currentTableFields = resp.properties[currentTable].fields;
+                for (var ct in currentTableFields) {
+                    if (!currentTableFields.hasOwnProperty(ct)) {continue; }
+                    var p = currentTableFields[ct];
+                    switch (p['type']) {
+                        case "SINGLE_LINE_TEXT":
+                        case "NUMBER":
+                        case "MULTI_LINE_TEXT":
+                        case "RICH_TEXT":
+                        case "CHECK_BOX":
+                        case "RADIO_BUTTON":
+                        case "DROP_DOWN":
+                        case "MULTI_SELECT":
+                        case "LINK":
+                        case "DATE":
+                        case "TIME":
+                        case "DATETIME":
+                        case "USER_SELECT":
+                        case "GROUP_SELECT":
+                        case "ORGANIZATION_SELECT":
+                            $option.attr("value", escapeHtml(p.code));
+                            $option.attr("name", escapeHtml(p.type));
+                            $option.text(escapeHtml(p.label));
+                            $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2')
+                            .append($option.clone());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
 
 
             function setCopyFromFieldDefault(res) {
@@ -315,87 +314,41 @@ jQuery.noConflict();
 
 
             //Set dropdown default
-            var thisAppId = kintone.app.getId();
-            kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
-            function(resp) {
-                setLookupFieldDefault(resp);
-                setCopyToTableDefault(resp);
-                setCopyToFieldDefault(resp);
+            function setDropdownDefault() {
+                kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
+                function(resp) {
+                    setLookupAndCopyToTableDefault(resp);
+                    setCopyToFieldDefault(resp);
 
-                if (!conf["lookupField"]) {
-                    setDefault();
-                    return;
-                }
+                    if (!conf["lookupField"]) {
+                        setDefault();
+                        return;
+                    }
 
-                setMappingFieldDefult(resp);
-                var lookup_field = conf["lookupField"];
-                var relateAppId = resp.properties[lookup_field].lookup.relatedApp.app;
-                kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId},
-                 function(res) {
-                    setCopyFromTableDefault(res);
-                    setCopyFromFieldDefault(res);
-                    setDefault();
+                    setMappingFieldDefult(resp);
+                    var lookup_field = conf["lookupField"];
+                    var relateAppId = resp.properties[lookup_field].lookup.relatedApp.app;
+                    kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId},
+                    function(res) {
+                        setCopyFromTableDefault(res);
+                        setCopyFromFieldDefault(res);
+                        setDefault();
+                    });
                 });
-            });
+            }
 
 
             function alertshow(elmParent) {
-                $(elmParent).parent().find('.kintoneplugin-alert').css({'display': 'block'});
+                $(elmParent).parent().find('.common').css({'display': 'block'});
                 return;
             }
 
 
             function alerthide(elmParent) {
-                $(elmParent).parent().find('.kintoneplugin-alert').css({'display': 'none'});
-            }
-
-            function dataClear_CopyToTableChanged() {
-                var rowNumber = $("#tc-plugin-copyfield-tbody").find("tr").length;
-                if (rowNumber > 2) {
-                    $('#tc-plugin-copyfield-tbody > tr:gt(1)').remove();
-                }
-                $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2 > option:gt(0)').remove();
-                $('#tc-plugin-copyfield-tbody > tr:eq(1) .tc-plugin-column2 > option:gt(0)').remove();
-                checkRowNumber();
+                $(elmParent).parent().find('.common').css({'display': 'none'});
             }
 
 
-            function setDropdown_CopyToTableChanged(resp) {
-                var currentTable = $('.copyToTable').val();
-                var currentTableFields = resp.properties[currentTable].fields;
-                var $option = $("<option>");
-                for (var tf in currentTableFields) {
-                    if (!currentTableFields.hasOwnProperty(tf)) {continue; }
-                    var p = currentTableFields[tf];
-                    switch (p['type']) {
-                        case "SINGLE_LINE_TEXT":
-                        case "NUMBER":
-                        case "MULTI_LINE_TEXT":
-                        case "RICH_TEXT":
-                        case "CHECK_BOX":
-                        case "RADIO_BUTTON":
-                        case "DROP_DOWN":
-                        case "MULTI_SELECT":
-                        case "LINK":
-                        case "DATE":
-                        case "TIME":
-                        case "DATETIME":
-                        case "USER_SELECT":
-                        case "GROUP_SELECT":
-                        case "ORGANIZATION_SELECT":
-                            $option.attr("value", escapeHtml(p.code));
-                            $option.attr("name", escapeHtml(p.type));
-                            $option.text(escapeHtml(p.label));
-                            $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2')
-                            .append($option.clone());
-                            $('#tc-plugin-copyfield-tbody > tr:eq(1) .tc-plugin-column2')
-                           .append($option.clone());
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
 
             function dataClear_lookupFieldChanged() {
                 var rownum_enable = $("#tc-plugin-enablefield-tbody").find("tr").length;
@@ -416,6 +369,25 @@ jQuery.noConflict();
             }
 
 
+
+            function setChangeEventField_lookupFieldChanged(resp) {
+                var lookup_field = $(".lookupField").val();
+                var mappingFields = resp.properties[lookup_field].lookup.fieldMappings;
+                var elmParent = $('.lookupField').parent();
+                for (var mf = 0; mf < mappingFields.length; mf++) {
+                    var relatedField = mappingFields[mf].relatedField;
+                    if (relatedField === "レコード番号" || relatedField === "记录编号" || relatedField === "Record_number") {
+                        $(elmParent).parent().find('#msg2').css({'display': 'none'});
+                        var currentField = mappingFields[mf].field;
+                        $('#changeEventField').val(currentField);
+                    } else {
+                        $(elmParent).parent().find('#msg2').css({'display': 'block'});
+                        $('#changeEventField').val("");
+                    }
+                }
+            }
+
+
             function setMappingField_lookupFieldChanged(resp) {
                 var lookupFieldCode = $(".lookupField").val();
                 var lookupMappingFields = resp.properties[lookupFieldCode].lookup.fieldMappings;
@@ -423,7 +395,8 @@ jQuery.noConflict();
                     if (!lookupMappingFields.hasOwnProperty(MappingKey)) {continue; }
                     var prop = lookupMappingFields[MappingKey];
                     var $option = $("<option>");
-                    if (prop.field !== "relatedRecNo") {
+                    var recNoField = $("#changeEventField").val();
+                    if (prop.field !== recNoField) {
                         $option.attr("value", escapeHtml(prop.field));
                         $option.text(escapeHtml(prop.field));
                         $('#tc-plugin-enablefield-tbody > tr:eq(0) .tc-plugin-column1')
@@ -455,7 +428,7 @@ jQuery.noConflict();
             }
 
 
-            function dataClear_copyFromTable() {
+            function dataClear_copyFromTableChanged() {
                 var rowNumber = $("#tc-plugin-copyfield-tbody").find("tr").length;
                 if (rowNumber > 2) {
                     $('#tc-plugin-copyfield-tbody > tr:gt(1)').remove();
@@ -506,20 +479,53 @@ jQuery.noConflict();
 
 
 
-            // change current table
-            $('.copyToTable').change(function() {
-                var elmParent = $('.copyToTable').parent();
-                if ($('.copyToTable').val() === "") {
-                    alertshow(elmParent);
-                } else {
-                    alerthide(elmParent);
-                    dataClear_CopyToTableChanged();
-                    return kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true),
-                    'GET', {'app': thisAppId}).then(function(resp) {
-                        setDropdown_CopyToTableChanged(resp);
-                    });
+            function dataClear_CopyToTableChanged() {
+                var rowNumber = $("#tc-plugin-copyfield-tbody").find("tr").length;
+                if (rowNumber > 2) {
+                    $('#tc-plugin-copyfield-tbody > tr:gt(1)').remove();
                 }
-            });
+                $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2 > option:gt(0)').remove();
+                $('#tc-plugin-copyfield-tbody > tr:eq(1) .tc-plugin-column2 > option:gt(0)').remove();
+                checkRowNumber();
+            }
+
+
+            function setDropdown_CopyToTableChanged(resp) {
+                var currentTable = $('.copyToTable').val();
+                var currentTableFields = resp.properties[currentTable].fields;
+                var $option = $("<option>");
+                for (var tf in currentTableFields) {
+                    if (!currentTableFields.hasOwnProperty(tf)) {continue; }
+                    var p = currentTableFields[tf];
+                    switch (p['type']) {
+                        case "SINGLE_LINE_TEXT":
+                        case "NUMBER":
+                        case "MULTI_LINE_TEXT":
+                        case "RICH_TEXT":
+                        case "CHECK_BOX":
+                        case "RADIO_BUTTON":
+                        case "DROP_DOWN":
+                        case "MULTI_SELECT":
+                        case "LINK":
+                        case "DATE":
+                        case "TIME":
+                        case "DATETIME":
+                        case "USER_SELECT":
+                        case "GROUP_SELECT":
+                        case "ORGANIZATION_SELECT":
+                            $option.attr("value", escapeHtml(p.code));
+                            $option.attr("name", escapeHtml(p.type));
+                            $option.text(escapeHtml(p.label));
+                            $('#tc-plugin-copyfield-tbody > tr:eq(0) .tc-plugin-column2')
+                            .append($option.clone());
+                            $('#tc-plugin-copyfield-tbody > tr:eq(1) .tc-plugin-column2')
+                           .append($option.clone());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
 
 
 
@@ -529,21 +535,23 @@ jQuery.noConflict();
                 var lookupFieldCode = $(".lookupField").val();
                 if (lookupFieldCode === "") {
                     alertshow(elmParent);
-                } else {
-                    alerthide(elmParent);
-                    dataClear_lookupFieldChanged();
-                    // set related table
-                    kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
-                    function(resp) {
-                        var relateAppId = resp.properties[lookupFieldCode].lookup.relatedApp.app;
-                        setMappingField_lookupFieldChanged(resp);
-                        // set related table fields
-                        return kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId })
-                        .then(function(res) {
-                            setCopyFromTable_lookupFieldChanged(res);
-                        });
-                    });
+                    $(elmParent).parent().find('#msg2').css({'display': 'none'});
+                    return;
                 }
+                alerthide(elmParent);
+                dataClear_lookupFieldChanged();
+                // set related table
+                kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
+                function(resp) {
+                    var relateAppId = resp.properties[lookupFieldCode].lookup.relatedApp.app;
+                    setChangeEventField_lookupFieldChanged(resp);
+                    setMappingField_lookupFieldChanged(resp);
+                    // set related table fields
+                    return kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId })
+                    .then(function(res) {
+                        setCopyFromTable_lookupFieldChanged(res);
+                    });
+                });
             });
 
 
@@ -552,22 +560,40 @@ jQuery.noConflict();
             $('.copyFromTable').change(function() {
                 var elmParent = $('.copyFromTable').parent();
                 var related_table = $('.copyFromTable').val();
+                if ($('.lookupField').val() === "") {return; }
                 if (related_table === "") {
                     alertshow(elmParent);
-                } else {
-                    alerthide(elmParent);
-                    dataClear_copyFromTable();
-                    // set related fields
-                    kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
-                    function(resp) {
-                        var lookupFieldCode = $(".lookupField").val();
-                        var relateAppId = resp.properties[lookupFieldCode].lookup.relatedApp.app;
-                        return kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId })
-                        .then(function(res) {
-                            setDropdown_CopyFromTableChanged(res);
-                        });
-                    });
+                    return;
                 }
+                alerthide(elmParent);
+                dataClear_copyFromTableChanged();
+                // set related fields
+                kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
+                function(resp) {
+                    var lookupFieldCode = $(".lookupField").val();
+                    var relateAppId = resp.properties[lookupFieldCode].lookup.relatedApp.app;
+                    return kintone.api('/k/v1/preview/app/form/fields', 'GET', {'app': relateAppId })
+                    .then(function(res) {
+                        setDropdown_CopyFromTableChanged(res);
+                    });
+                });
+            });
+
+
+
+            // change current table
+            $('.copyToTable').change(function() {
+                var elmParent = $('.copyToTable').parent();
+                if ($('.copyToTable').val() === "") {
+                    alertshow(elmParent);
+                    return;
+                }
+                alerthide(elmParent);
+                dataClear_CopyToTableChanged();
+                kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true),
+                'GET', {'app': thisAppId},function(resp) {
+                    setDropdown_CopyToTableChanged(resp);
+                });
             });
 
 
@@ -593,46 +619,56 @@ jQuery.noConflict();
                 var user_lang = kintone.getLoginUser().language;
                 var error_messages = {
                     'ja': {
-                        'copy_field': {
-                            "1": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
-                            "2": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
-                            "4": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                        'lookup_field': {
+                            "1": "ルークアップフィールドは指定してください。"
                         },
                         'enable_field': {
-                            "1": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のフィールドは指定してください。",
-                            "2": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のチェックボックスにチェックを入れてください。",
-                            "3": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目が何も指定されていません。"
+                            "1": "「編集可にするルークアップコピー先フィールドの指定」の" + row_num + "行目のフィールドは指定してください。"
+                        },
+                        'copy_field': {
+                            "1": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
+                            "2": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
+                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
+                            "4": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目は何も指定されていません。"
                         }
                     },
                     'en': {
-                        'copy_field': {
-                            "1": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
-                            "2": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
-                            "4": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                        'lookup_field': {
+                            "1": "ルークアップフィールドは指定してください。"
                         },
                         'enable_field': {
-                            "1": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のフィールドは指定してください。",
-                            "2": "「lookupコピー先フィールドの編集可否の設定」の" + row_num + "行目のチェックボックスにチェックを入れてください。",
-                            "3": "「コピーするテーブルフィールドの指定」の" + row_num + "行目が何も指定されていません。"
+                            "1": "「編集可にするlookupコピー先フィールドの指定」の" + row_num + "行目のフィールドは指定してください。"
+                        },
+                        'copy_field': {
+                            "1": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
+                            "2": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
+                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
+                            "4": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目は何も指定されていません。"
                         }
                     },
                     'zh': {
+                        'lookup_field': {
+                            "1": "lookup字段不能为空。"
+                        },
+                        'enable_field': {
+                            "1": "[选择要设置成可编辑的字段]的第" + row_num + "行的字段未选择。"
+                        },
                         'copy_field': {
                             "1": "[设置要复制的字段]的第" + row_num + "行未指定复制目标字段。",
                             "2": "[设置要复制的字段]的第" + row_num + "行未指定复制来源字段。",
                             "3": "[设置要复制的字段]的第" + row_num + "行的字段类型不一致。请重新选择。",
                             "4": "[设置要复制的字段]的第" + row_num + "行未选择任何字段。"
-                        },
-                        'enable_field': {
-                            "1": "[设置复制目标字段编辑可否]的第" + row_num + "行的字段未选择。",
-                            "2": "[设置复制目标字段编辑可否]的第" + row_num + "行的复选框未勾选い。",
-                            "3": "[设置复制目标字段编辑可否]的第" + row_num + "行未作内容设置。"
                         }
                     }
                 };
                 return error_messages[user_lang][type][error_num];
+            }
+
+
+            function checklookupField(config) {
+                if ($('.lookupField').val() === "") {
+                    throw new Error(createErrorMessage("lookup_field", "1"));
+                }
             }
 
 
@@ -641,14 +677,8 @@ jQuery.noConflict();
                 var row_num = Number(config["enable_row_number"]);
                 for (var ef = 1; ef <= row_num; ef++) {
                     var enable_field = JSON.parse(config['enablefield_row' + ef]);
-                    if (enable_field.column1 === "" && enable_field.column2 === true) {
+                    if (enable_field.column1 === "") {
                         throw new Error(createErrorMessage("enable_field", "1", ef));
-                    }
-                    if (enable_field.column1 !== "" && enable_field.column2 === false) {
-                        throw new Error(createErrorMessage("enable_field", "2", ef));
-                    }
-                    if (enable_field.column1 === "" && enable_field.column2 === false) {
-                        throw new Error(createErrorMessage("enable_field", "3", ef));
                     }
                 }
             }
@@ -685,15 +715,18 @@ jQuery.noConflict();
                 // Save lookupField setting to config;
                 config["lookupField"] = String($(".lookupField").val());
 
+                // Set change event field
+                config["changeEventField"] = String($("#changeEventField").val());
+
                 // Set enablefield setting to config;
                 var totalrows_enablefield = $("#tc-plugin-enablefield-tbody").find("tr").length - 1;
                 config["enable_row_number"] = String(totalrows_enablefield);
                 for (var h = 1; h <= totalrows_enablefield; h++) {
                     var lookupfield_value = $('#tc-plugin-enablefield-tbody > tr')
                         .eq(h).find('.tc-plugin-column1').val();
-                    var checbox_value = $('#tc-plugin-enablefield-tbody > tr:eq(' + h + ') .tc-plugin-column2')
-                        .prop("checked");
-                    var row_enablefield = {"column1": lookupfield_value, "column2": checbox_value};
+                    // var checbox_value = $('#tc-plugin-enablefield-tbody > tr:eq(' + h + ') .tc-plugin-column2')
+                        // .prop("checked");
+                    var row_enablefield = {"column1": lookupfield_value};
                     config['enablefield_row' + h] = JSON.stringify(row_enablefield);
                 }
 
@@ -719,6 +752,7 @@ jQuery.noConflict();
             $('#kintoneplugin-submit').click(function() {
                 try {
                     var config = createConfig();
+                    checklookupField(config);
                     checkConfigCopyfieldVal(config);
                     checkConfigEnablefieldVal(config);
                     kintone.plugin.app.setConfig(config);
@@ -732,5 +766,6 @@ jQuery.noConflict();
             $('#kintoneplugin-cancel').click(function() {
                 history.back();
             });
+            setDropdownDefault();
         });
 })(jQuery, kintone.$PLUGIN_ID);

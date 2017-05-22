@@ -41,8 +41,8 @@ jQuery.noConflict();
     function setTableData(Table) {
         var thisRecord = kintone.app.record.get();
         var tableCode = conf["copyToTable"];
-        var table_length = thisRecord.record[tableCode].value.length;
         var thisTableFields = thisRecord.record[tableCode].value[0].value;
+        var newrow = [];
 
         for (var h = 0; h < Table.value.length; h++) {
             var row = {};
@@ -71,58 +71,48 @@ jQuery.noConflict();
                     }
                 }
             }
-            thisRecord.record.Table.value.push(row);
+            newrow.push(row);
         }
-
-        // delete existed rows
-        for (var i = 0; i < table_length; i++) {
-            thisRecord.record.Table.value.shift();
-        }
+        thisRecord.record.Table.value = newrow;
         kintone.app.record.set(thisRecord);
     }
 
 
 
-// Enable mapping field
-    function setFieldDesable(resp) {
-        var events = ['app.record.create.show', 'app.record.edit.show'];
-        kintone.events.on(events, function(event) {
-            var record = event.record;
-            for (var h = 1; h < ENABLE_ROW_NUM + 1; h++) {
-                var fieldCode = conf['enablefield_row' + h]['column1'];
-                if (conf['enablefield_row' + h]['column2'] === true) {
-                    record[fieldCode].disabled = false;
-                } else {
-                    record[fieldCode].disabled = true;
-                }
-            }
-            return event;
-        });
-    }
+
+    // Enable mapping field
+    var events = ['app.record.create.show', 'app.record.edit.show'];
+    kintone.events.on(events, function(event) {
+        var record = event.record;
+        for (var h = 1; h < ENABLE_ROW_NUM + 1; h++) {
+            var fieldCode = conf['enablefield_row' + h]['column1'];
+            record[fieldCode].disabled = false;
+        }
+        return event;
+    });
 
 
 
     //get data from form
-    var body = {
-        'app': kintone.app.getId()
-    };
-    kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', body, function(resp) {
-        setFieldDesable(resp);
-        var properties = resp['properties'];
-        if (!resp['properties']['relatedRecNo']) {
-            alert("Field(id:relatedRecNo) not found!");
+    var changeEventField = conf["changeEventField"];
+    if (changeEventField === "") {return false; }
+    var ChangeEvents = ["app.record.create.change." + changeEventField,
+        "app.record.edit.change." + changeEventField];
+    kintone.events.on(ChangeEvents, function(event) {
+        var record = event.record;
+        if (record[changeEventField].value === undefined) {
+            return;
         }
-        var lookup_field = conf['lookupField'];
-        var relatedAppId = properties[lookup_field].lookup.relatedApp.app;
 
-        // change event
-        kintone.events.on("app.record.create.change.relatedRecNo", function(event) {
-            var record = event.record;
-            var relatedRecId = record.relatedRecNo.value;
+        var body = {
+            'app': kintone.app.getId()
+        };
+        kintone.api(kintone.api.url('/k/v1/app/form/fields', true), 'GET', body, function(resp) {
+            var lookup_field = conf['lookupField'];
+            var relatedAppId = resp.properties[lookup_field].lookup.relatedApp.app;
+            var relatedRecId = record[changeEventField].value;
             kintone.api(kintone.api.url('/k/v1/record', true),
-            'GET',
-            {'app': relatedAppId, 'id': relatedRecId},
-            function(rec) {
+            'GET', {'app': relatedAppId, 'id': relatedRecId}, function(rec) {
                 setTableData(rec.record.Table);
             });
         });

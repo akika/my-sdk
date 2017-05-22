@@ -8,12 +8,21 @@
                    <option value="">-----</option>
                </select>
            </div>
-           <div class="kintoneplugin-alert" id="msg1">
+           <div class="kintoneplugin-alert common" id="msg1">
                <p>{{html:terms.tc_message}}。</p>
+           </div>
+           <div class="kintoneplugin-alert" id="msg2">
+               <p>{{html:terms.tc_message_changeEventfield}}</p>
            </div>
        </div>
     </div>
-
+    <div class="block tc-plugin-block" id="changeEventItem">
+       <div class="kintoneplugin-label">{{html:terms.tc_changeEvent_label}}<span class="kintoneplugin-require">*</span></div>
+       <div class="kintoneplugin-row">{{html:terms.tc_changeEvent_description}}</div>
+       <div class="kintoneplugin-select-outer">
+           <input id="changeEventField" type="text" disabled="disabled" class="kintoneplugin-input-text"></input>
+       </div>
+    </div>
 
     <div class="block tc-plugin-block">
        <div class="kintoneplugin-label">{{html:terms.tc_disable_label}}</div>
@@ -23,10 +32,6 @@
                       <tr>
                           <th class="kintoneplugin-table-th">
                               <span class="title">{{html:terms.tc_disable_field_title}}
-                              </span>
-                          </th>
-                          <th class="kintoneplugin-table-th">
-                              <span class="title">{{html:terms.tc_disable_checkbox_title}}
                               </span>
                           </th>
                       </tr>
@@ -43,14 +48,6 @@
                                           </select>
                                       </div>
                                   </div>
-                                </div>
-                              </div>
-                          </td>
-                          <td>
-                              <div class="kintoneplugin-table-td-control">
-                                <div class="kintoneplugin-table-td-control-value">
-                                        <input type="checkbox" class="tc-plugin-column2">
-                                        <label>{{html:terms.tc_disable_checkbox_text}}</label>
                                 </div>
                               </div>
                           </td>
@@ -74,7 +71,7 @@
                         <option value="">-----</option>
                       </select>
                   </div>
-                  <div class="kintoneplugin-alert" id="msg2">
+                  <div class="kintoneplugin-alert common" id="msg3">
                       <p>{{html:terms.tc_message}}。</p>
                   </div>
               </div>
@@ -85,7 +82,7 @@
                           <option value="">-----</option>
                       </select>
                   </div>
-                  <div class="kintoneplugin-alert" id="msg3">
+                  <div class="kintoneplugin-alert common" id="msg4">
                       <p>{{html:terms.tc_message}}。</p>
                   </div>
               </div>

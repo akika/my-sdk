@@ -25,5 +25,8 @@
 }
 .kintoneplugin-alert{
   display:none;
-  width:200px;
+  max-width:400px;
+}
+#changeEventItem{
+  display:none;
 }
