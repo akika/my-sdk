@@ -1,5 +1,5 @@
 /*
- * New Condition Format plug-in
+ * Copy Table Between Apps plug-in
  * Copyright (c) 2017 Cybozu
  *
  * Licensed under the MIT License
@@ -86,6 +86,7 @@ jQuery.noConflict();
         var record = event.record;
         for (var h = 1; h < ENABLE_ROW_NUM + 1; h++) {
             var fieldCode = conf['enablefield_row' + h]['column1'];
+            if (!fieldCode) {return; }
             record[fieldCode].disabled = false;
         }
         return event;
@@ -97,7 +98,7 @@ jQuery.noConflict();
     var changeEventField = conf["changeEventField"];
     if (changeEventField === "") {return false; }
     var ChangeEvents = ["app.record.create.change." + changeEventField,
-        "app.record.edit.change." + changeEventField];
+                        "app.record.edit.change." + changeEventField];
     kintone.events.on(ChangeEvents, function(event) {
         var record = event.record;
         if (record[changeEventField].value === undefined) {

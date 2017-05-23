@@ -1,3 +1,10 @@
+/*
+ * Copy Table Between Apps plug-in
+ * Copyright (c) 2017 Cybozu
+ *
+ * Licensed under the MIT License
+ */
+
 jQuery.noConflict();
 
 (function($, PLUGIN_ID) {
@@ -21,11 +28,12 @@ jQuery.noConflict();
 
             var terms = {
                 'ja': {
-                    'tc_lookup_label': 'lookupフィールドの指定',
+                    'tc_lookup_label': 'ルックアップフィールドの指定',
                     'tc_changeEvent_label': 'コピー元レコード番号',
-                    'tc_changeEvent_description': '‘テーブルをコピーするには、lookup設定画面の「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。',
-                    'tc_disable_label': '編集可にするlookupコピー先フィールドの指定',
-                    'tc_disable_description': 'lookup設定画面の「ほかのフィールドのコピー」で指定したコピー先フィールドを編集可にします。',
+                    'tc_changeEvent_description':
+                    '‘テーブルをコピーするには、ルークアルックアップ設定画面の「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。',
+                    'tc_disable_label': '編集可にするルックアップコピー先フィールドの指定',
+                    'tc_disable_description': 'ルックアップ設定画面の「ほかのフィールドのコピー」で指定したコピー先フィールドを編集可にします。',
                     'tc_disable_field_title': 'フィールドコード',
                     'tc_tablefield_label': 'コピー元テーブルとコピー先テーブルの指定',
                     'tc_tablefield_from_title': 'コピー元テーブル',
@@ -37,8 +45,8 @@ jQuery.noConflict();
                     'tc_submit': '保存',
                     'tc_cancel': 'キャンセル',
                     'tc_message': '必須項目です',
-                    'tc_caution': '選択肢を切り替えるたびに、以下に一部の項目の設定が消えますのでご注意ください！',
-                    'tc_message_changeEventfield': 'lookupの「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。フォームの設定をご確認ください'
+                    'tc_caution': '選択肢を切り替えるたびに、以下に一部の項目の設定が初期値に戻るのでご注意ください！',
+                    'tc_message_changeEventfield': 'ルックアップの「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。フォームの設定をご確認ください'
                 },
                 'en': {
                     'tc_lookup_label': 'Select lookup field',
@@ -86,7 +94,7 @@ jQuery.noConflict();
                 }
             };
 
-            // To switch the display by the login user's language (English display in the case of Chinese)
+            // To switch the display by the login user's language
             var lang = kintone.getLoginUser().language;
             var i18n = (lang in terms) ? terms[lang] : terms['en'];
             var configHtml = $('#tc-plugin').html();
@@ -95,7 +103,7 @@ jQuery.noConflict();
             var thisAppId = kintone.app.getId();
 
 
-            // escape fields vale
+            // escape fields value
             function escapeHtml(htmlstr) {
                 return htmlstr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -124,14 +132,6 @@ jQuery.noConflict();
                     );
                     $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column1")
                     .val(conf["enablefield_row" + tn]['column1']);
-
-                    // if (conf["enablefield_row" + tn]['column2'] === true) {
-                        // $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
-                        // .prop("checked", true);
-                    // } else {
-                        // $("#tc-plugin-enablefield-tbody > tr:eq(" + tn + ") .tc-plugin-column2")
-                        // .prop("checked", false);
-                    // }
                 }
             }
 
@@ -313,7 +313,6 @@ jQuery.noConflict();
             }
 
 
-            //Set dropdown default
             function setDropdownDefault() {
                 kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true), 'GET', {'app': thisAppId},
                 function(resp) {
@@ -591,7 +590,7 @@ jQuery.noConflict();
                 alerthide(elmParent);
                 dataClear_CopyToTableChanged();
                 kintone.api(kintone.api.url('/k/v1/preview/app/form/fields', true),
-                'GET', {'app': thisAppId},function(resp) {
+                'GET', {'app': thisAppId}, function(resp) {
                     setDropdown_CopyToTableChanged(resp);
                 });
             });
@@ -622,42 +621,30 @@ jQuery.noConflict();
                         'lookup_field': {
                             "1": "ルークアップフィールドは指定してください。"
                         },
-                        'enable_field': {
-                            "1": "「編集可にするルークアップコピー先フィールドの指定」の" + row_num + "行目のフィールドは指定してください。"
-                        },
                         'copy_field': {
                             "1": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
                             "2": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
-                            "4": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目は何も指定されていません。"
+                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。"
                         }
                     },
                     'en': {
                         'lookup_field': {
                             "1": "ルークアップフィールドは指定してください。"
                         },
-                        'enable_field': {
-                            "1": "「編集可にするlookupコピー先フィールドの指定」の" + row_num + "行目のフィールドは指定してください。"
-                        },
                         'copy_field': {
                             "1": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
                             "2": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。",
-                            "4": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目は何も指定されていません。"
+                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。"
                         }
                     },
                     'zh': {
                         'lookup_field': {
                             "1": "lookup字段不能为空。"
                         },
-                        'enable_field': {
-                            "1": "[选择要设置成可编辑的字段]的第" + row_num + "行的字段未选择。"
-                        },
                         'copy_field': {
                             "1": "[设置要复制的字段]的第" + row_num + "行未指定复制目标字段。",
                             "2": "[设置要复制的字段]的第" + row_num + "行未指定复制来源字段。",
-                            "3": "[设置要复制的字段]的第" + row_num + "行的字段类型不一致。请重新选择。",
-                            "4": "[设置要复制的字段]的第" + row_num + "行未选择任何字段。"
+                            "3": "[设置要复制的字段]的第" + row_num + "行的字段类型不一致。请重新选择。"
                         }
                     }
                 };
@@ -671,17 +658,6 @@ jQuery.noConflict();
                 }
             }
 
-
-
-            function checkConfigEnablefieldVal(config) {
-                var row_num = Number(config["enable_row_number"]);
-                for (var ef = 1; ef <= row_num; ef++) {
-                    var enable_field = JSON.parse(config['enablefield_row' + ef]);
-                    if (enable_field.column1 === "") {
-                        throw new Error(createErrorMessage("enable_field", "1", ef));
-                    }
-                }
-            }
 
 
             function checkConfigCopyfieldVal(config) {
@@ -702,9 +678,6 @@ jQuery.noConflict();
                     if (copy_field.column1 !== "" && copy_field.column2 !== "" && type2 !== type1) {
                         throw new Error(createErrorMessage("copy_field", "3", cf));
                     }
-                    if (copy_field.column1 === "" && copy_field.column2 === "") {
-                        throw new Error(createErrorMessage("copy_field", "4", cf));
-                    }
                 }
             }
 
@@ -715,20 +688,24 @@ jQuery.noConflict();
                 // Save lookupField setting to config;
                 config["lookupField"] = String($(".lookupField").val());
 
-                // Set change event field
+                // Set change event field to config;
                 config["changeEventField"] = String($("#changeEventField").val());
 
                 // Set enablefield setting to config;
                 var totalrows_enablefield = $("#tc-plugin-enablefield-tbody").find("tr").length - 1;
-                config["enable_row_number"] = String(totalrows_enablefield);
                 for (var h = 1; h <= totalrows_enablefield; h++) {
                     var lookupfield_value = $('#tc-plugin-enablefield-tbody > tr')
                         .eq(h).find('.tc-plugin-column1').val();
-                    // var checbox_value = $('#tc-plugin-enablefield-tbody > tr:eq(' + h + ') .tc-plugin-column2')
-                        // .prop("checked");
+                    if (lookupfield_value === "") {
+                        $('#tc-plugin-enablefield-tbody > tr:eq(' + h + ')').remove();
+                        totalrows_enablefield = totalrows_enablefield - 1;
+                        h--;
+                        continue;
+                    }
                     var row_enablefield = {"column1": lookupfield_value};
                     config['enablefield_row' + h] = JSON.stringify(row_enablefield);
                 }
+                config["enable_row_number"] = String(totalrows_enablefield);
 
                 // Set tablefield setting to config;
                 config["copyFromTable"] = String($(".copyFromTable").val());
@@ -736,14 +713,19 @@ jQuery.noConflict();
 
                 // Set copyfield setting to config;
                 var totalrows_copyfield = $("#tc-plugin-copyfield-tbody").find("tr").length - 1;
-                config["table_row_number"] = String(totalrows_copyfield);
-                //  config['row_number'] = [];
                 for (var y = 1; y <= totalrows_copyfield; y++) {
                     var valuecopyfrom = $('#tc-plugin-copyfield-tbody > tr').eq(y).find('.tc-plugin-column1').val();
                     var valuecopyto = $('#tc-plugin-copyfield-tbody > tr').eq(y).find('.tc-plugin-column2').val();
+                    if (valuecopyfrom === "" && valuecopyto === "") {
+                        $('#tc-plugin-copyfield-tbody > tr:eq(' + y + ')').remove();
+                        totalrows_copyfield = totalrows_copyfield - 1;
+                        y--;
+                        continue;
+                    }
                     var row_table = {"column1": valuecopyfrom, "column2": valuecopyto};
                     config['table_row' + y] = JSON.stringify(row_table);
                 }
+                config["table_row_number"] = String(totalrows_copyfield);
                 return config;
             }
 
@@ -754,7 +736,6 @@ jQuery.noConflict();
                     var config = createConfig();
                     checklookupField(config);
                     checkConfigCopyfieldVal(config);
-                    checkConfigEnablefieldVal(config);
                     kintone.plugin.app.setConfig(config);
                 } catch(error) {
                     alert(error.message);
