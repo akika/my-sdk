@@ -1,5 +1,5 @@
 /*
- * Copy Table Between Apps plug-in
+ * Table lookup plug-in
  * Copyright (c) 2017 Cybozu
  *
  * Licensed under the MIT License
@@ -49,28 +49,25 @@ jQuery.noConflict();
                     'tc_message_changeEventfield': 'ルックアップの「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります。フォームの設定をご確認ください'
                 },
                 'en': {
-                    'tc_lookup_label': 'Select lookup field',
-                    'tc_disable_label': 'Enable field',
-                    'tc_changeEvent_label': 'コピー元レコード番号',
+                    'tc_lookup_label': 'The Lookup field',
+                    'tc_changeEvent_label': 'Editable fields',
                     'tc_changeEvent_description':
-                    'テーブルをコピーするには、lookuplookup設定画面の「ほかのフィールドのコピー」にコピー元のレコード番号を指定する必要があります',
-                    'tc_disable_description':
-                    'Seleted Mapping_Field that you want to set enable.',
-                    'tc_disable_field_title': 'field',
-                    'tc_disable_checkbox_title': 'Enable fields',
-                    'tc_disable_checkbox_text': 'Enable fields',
-                    'tc_tablefield_label': 'Copy to which table',
-                    'tc_tablefield_from_title': 'From',
-                    'tc_tablefield_to_title': 'To',
-                    'tc_copyfield_label': 'Copy from  which Table',
-                    'tc_copyfield_description': 'Select which field to copy。',
-                    'tc_copyfield_from_title': 'From',
-                    'tc_copyfield_to_title': 'To',
+                    'List the fields used in the Field Mappings option of the Lookup. These fields will become editable.',
+                    'tc_disable_label': 'Field Code',
+                    'tc_disable_description': 'List the fields used in the Field Mappings option of the Lookup. These fields will become editable.',
+                    'tc_disable_field_title': 'Field Code',
+                    'tc_tablefield_label': 'Table Lookup',
+                    'tc_tablefield_from_title': 'Datasource table',
+                    'tc_tablefield_to_title': 'Endpoint table in this App',
+                    'tc_copyfield_label': 'Table Field Mappings',
+                    'tc_copyfield_description': 'Choose which fields in the Datasource table will be mapped to which fields in the table of this App.',
+                    'tc_copyfield_from_title': 'Datasource table field',
+                    'tc_copyfield_to_title': 'Endpoint table field',
                     'tc_submit': 'Save',
                     'tc_cancel': 'Cancel',
-                    'tc_message': 'Must select!',
-                    'tc_caution': 'When option is changed,next setting will be cleared！',
-                    'tc_message_changeEventfield': 'Not find the record_number field in mapping field。'
+                    'tc_message': 'Required field',
+                    'tc_caution': 'Note: Edits to this setting will set some other settings to their default value.',
+                    'tc_message_changeEventfield': 'The Record number must be set as one of the mappings for the Field Mappings settings of the Lookup.'
                 },
                 'zh': {
                     'tc_lookup_label': '选择lookup字段',
@@ -629,12 +626,12 @@ jQuery.noConflict();
                     },
                     'en': {
                         'lookup_field': {
-                            "1": "ルークアップフィールドは指定してください。"
+                            "1": "The Lookup field has not been set."
                         },
                         'copy_field': {
-                            "1": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー先を指定してください。",
-                            "2": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のコピー元を指定してください。",
-                            "3": "「コピーを行うテーブル内のフィールドの指定」の" + row_num + "行目のフィールドタイプが一致していません。指定しなおしてください。"
+                            "1": "Set the Endpoint table field for row " + row_num + " of the Table Field Mappings.",
+                            "2": "Set the Datasource table field for row " + row_num + " of the Table Field Mappings.",
+                            "3": "The field types do not match for row " + row_num + " of the Table Field Mappings."
                         }
                     },
                     'zh': {

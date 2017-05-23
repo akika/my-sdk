@@ -1,5 +1,5 @@
 /*
- * Copy Table Between Apps plug-in
+ * Table lookup plug-in
  * Copyright (c) 2017 Cybozu
  *
  * Licensed under the MIT License
