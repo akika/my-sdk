@@ -86,8 +86,9 @@ jQuery.noConflict();
         var record = event.record;
         for (var h = 1; h < ENABLE_ROW_NUM + 1; h++) {
             var fieldCode = conf['enablefield_row' + h]['column1'];
-            if (!fieldCode) {return; }
-            record[fieldCode].disabled = false;
+            if (fieldCode) {
+                record[fieldCode].disabled = false;
+            }
         }
         return event;
     });
