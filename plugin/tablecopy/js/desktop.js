@@ -36,44 +36,99 @@ jQuery.noConflict();
     }
 
 
-
     //create table data
-    function setTableData(Table) {
+    function setTableData(relatedRecord) {
         var thisRecord = kintone.app.record.get();
         var tableCode = conf["copyToTable"];
         var thisTableFields = thisRecord.record[tableCode].value[0].value;
+        var relatedTableCode = conf['copyFromTable'];
+        var relatedTableVal = relatedRecord[relatedTableCode].value;
         var newrow = [];
 
-        for (var h = 0; h < Table.value.length; h++) {
+        for (var h = 0; h < relatedTableVal.length; h++) {
             var row = {};
             row.value = {};
-
-            var fields = Table.value[h].value;
+            var relatedFields = relatedTableVal[h].value;
 
             // loop every filed in This table
             for (var key in thisTableFields) {
                 if (!thisTableFields.hasOwnProperty(key)) {continue; }
                 row.value[key] = {};
-
                 for (var m = 1; m < TABLE_ROW_NUM + 1; m++) {
                     var copyFromField = conf['table_row' + m]['column1'];
                     var copyToField = conf['table_row' + m]['column2'];
-
+                    var relatedFieldValue = relatedFields[copyFromField].value;
                     if (key === copyToField) {
-                        if (thisTableFields.hasOwnProperty(copyToField)) {
-                            row.value[key].value = escapeHtml(fields[copyFromField].value);
-                            row.value[key].type = escapeHtml(thisTableFields[key].type);
+                        if (!thisTableFields.hasOwnProperty(copyToField)) {continue; }
+                        switch (thisTableFields[key].type) {
+                            case "SINGLE_LINE_TEXT":
+                            case "NUMBER":
+                            case "MULTI_LINE_TEXT":
+                            case "RICH_TEXT":
+                            case "DROP_DOWN":
+                            case "LINK":
+                            case "DATETIME":
+                            case "DATE":
+                            case "TIME":
+                            case "RADIO_BUTTON":
+                                row.value[key].value = relatedFieldValue;
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                            case "CHECK_BOX":
+                            case "MULTI_SELECT":
+                                for (var vl = 0; vl < relatedFieldValue.length; vl++) {
+                                    row.value[key].value[vl] = relatedFieldValue[vl];
+                                }
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                            case "USER_SELECT":
+                            case "GROUP_SELECT":
+                            case "ORGANIZATION_SELECT":
+                                row.value[key].value = [];
+                                for (var vu = 0; vu < relatedFieldValue.length; vu++) {
+                                    row.value[key].value [vu] = {};
+                                    row.value[key].value [vu].code = relatedFieldValue[vu].code;
+                                }
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
                         }
                         break;
                     }else {
-                        row.value[key].value = "";
-                        row.value[key].type = escapeHtml(thisTableFields[key].type);
+                        switch (thisTableFields[key].type) {
+                            case "RICH_TEXT":
+                            case "SINGLE_LINE_TEXT":
+                            case "NUMBER":
+                            case "MULTI_LINE_TEXT":
+                            case "DATETIME":
+                            case "LINK":
+                                row.value[key].value = "";
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                            case "DROP_DOWN":
+                            case "DATE":
+                            case "TIME":
+                                row.value[key].value = null;
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                            case "RADIO_BUTTON":
+                                row.value[key].value = thisTableFields[key].value;
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                            case "CHECK_BOX":
+                            case "MULTI_SELECT":
+                            case "USER_SELECT":
+                            case "GROUP_SELECT":
+                            case "ORGANIZATION_SELECT":
+                                row.value[key].value = [];
+                                row.value[key].type = escapeHtml(thisTableFields[key].type);
+                                break;
+                        }
                     }
                 }
             }
             newrow.push(row);
         }
-        thisRecord.record.Table.value = newrow;
+        thisRecord.record[tableCode].value = newrow;
         kintone.app.record.set(thisRecord);
     }
 
@@ -115,7 +170,10 @@ jQuery.noConflict();
             var relatedRecId = record[changeEventField].value;
             kintone.api(kintone.api.url('/k/v1/record', true),
             'GET', {'app': relatedAppId, 'id': relatedRecId}, function(rec) {
-                setTableData(rec.record.Table);
+                var relatedRecord = rec.record;
+                if (TABLE_ROW_NUM !== 0) {
+                    setTableData(relatedRecord);
+                }
             });
         });
     });
