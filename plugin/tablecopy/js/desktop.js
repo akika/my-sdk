@@ -35,6 +35,77 @@ jQuery.noConflict();
         conf["table_row" + k] = JSON.parse(conf["table_row" + k]);
     }
 
+    function createSettedFieldData(thisTableFields, key, relatedFieldValue, rowValue) {
+        switch (thisTableFields[key].type) {
+            case "SINGLE_LINE_TEXT":
+            case "NUMBER":
+            case "MULTI_LINE_TEXT":
+            case "RICH_TEXT":
+            case "DROP_DOWN":
+            case "LINK":
+            case "DATETIME":
+            case "DATE":
+            case "TIME":
+            case "RADIO_BUTTON":
+                rowValue.value = relatedFieldValue;
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+            case "CHECK_BOX":
+            case "MULTI_SELECT":
+                for (var vl = 0; vl < relatedFieldValue.length; vl++) {
+                    rowValue.value[vl] = relatedFieldValue[vl];
+                }
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+            case "USER_SELECT":
+            case "GROUP_SELECT":
+            case "ORGANIZATION_SELECT":
+                rowValue.value = [];
+                for (var vu = 0; vu < relatedFieldValue.length; vu++) {
+                    rowValue.value [vu] = {};
+                    rowValue.value [vu].code = relatedFieldValue[vu].code;
+                }
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+        }
+        return rowValue;
+    }
+
+    function createNotSettedFieldData(thisTableFields, key, relatedFieldValue, rowValue) {
+        switch (thisTableFields[key].type) {
+            case "RICH_TEXT":
+            case "SINGLE_LINE_TEXT":
+            case "NUMBER":
+            case "MULTI_LINE_TEXT":
+            case "DATETIME":
+            case "LINK":
+            case "CALC":
+                rowValue.value = "";
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+            case "DROP_DOWN":
+            case "DATE":
+            case "TIME":
+                rowValue.value = null;
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+            case "RADIO_BUTTON":
+                rowValue.value = thisTableFields[key].value;
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+            case "CHECK_BOX":
+            case "MULTI_SELECT":
+            case "USER_SELECT":
+            case "GROUP_SELECT":
+            case "ORGANIZATION_SELECT":
+            case "FILE":
+                rowValue.value = [];
+                rowValue.type = escapeHtml(thisTableFields[key].type);
+                break;
+        }
+        return rowValue;
+    }
+
 
     //create table data
     function setTableData(relatedRecord) {
@@ -58,71 +129,13 @@ jQuery.noConflict();
                     var copyFromField = conf['table_row' + m]['column1'];
                     var copyToField = conf['table_row' + m]['column2'];
                     var relatedFieldValue = relatedFields[copyFromField].value;
+                    var rowValue = row.value[key];
                     if (key === copyToField) {
                         if (!thisTableFields.hasOwnProperty(copyToField)) {continue; }
-                        switch (thisTableFields[key].type) {
-                            case "SINGLE_LINE_TEXT":
-                            case "NUMBER":
-                            case "MULTI_LINE_TEXT":
-                            case "RICH_TEXT":
-                            case "DROP_DOWN":
-                            case "LINK":
-                            case "DATETIME":
-                            case "DATE":
-                            case "TIME":
-                            case "RADIO_BUTTON":
-                                row.value[key].value = relatedFieldValue;
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                            case "CHECK_BOX":
-                            case "MULTI_SELECT":
-                                for (var vl = 0; vl < relatedFieldValue.length; vl++) {
-                                    row.value[key].value[vl] = relatedFieldValue[vl];
-                                }
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                            case "USER_SELECT":
-                            case "GROUP_SELECT":
-                            case "ORGANIZATION_SELECT":
-                                row.value[key].value = [];
-                                for (var vu = 0; vu < relatedFieldValue.length; vu++) {
-                                    row.value[key].value [vu] = {};
-                                    row.value[key].value [vu].code = relatedFieldValue[vu].code;
-                                }
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                        }
+                        row.value[key] = createSettedFieldData(thisTableFields, key, relatedFieldValue, rowValue);
                         break;
                     }else {
-                        switch (thisTableFields[key].type) {
-                            case "RICH_TEXT":
-                            case "SINGLE_LINE_TEXT":
-                            case "NUMBER":
-                            case "MULTI_LINE_TEXT":
-                            case "DATETIME":
-                            case "LINK":
-                                row.value[key].value = "";
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                            case "DROP_DOWN":
-                            case "DATE":
-                            case "TIME":
-                                row.value[key].value = null;
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                            case "RADIO_BUTTON":
-                                row.value[key].value = thisTableFields[key].value;
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                            case "CHECK_BOX":
-                            case "MULTI_SELECT":
-                            case "USER_SELECT":
-                            case "GROUP_SELECT":
-                            case "ORGANIZATION_SELECT":
-                                row.value[key].value = [];
-                                row.value[key].type = escapeHtml(thisTableFields[key].type);
-                                break;
-                        }
+                        row.value[key] = createNotSettedFieldData(thisTableFields, key, relatedFieldValue, rowValue);
                     }
                 }
             }
