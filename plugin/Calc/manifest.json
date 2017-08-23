@@ -31,9 +31,7 @@
 			"js/config.js"
 		],
 		"css": [
-			"css/51-current-default.css",
-			"https://js.cybozu.com/jqueryui/1.11.4/themes/smoothness/jquery-ui.css",
-			"https://js.cybozu.com/font-awesome/v4.4.0/css/font-awesome.min.css",
+			"css/51-modern-default.css",
 			"css/config.css"
 		],
 		"required_params": []

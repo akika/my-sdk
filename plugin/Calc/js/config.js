@@ -16,9 +16,12 @@ jQuery.noConflict();
         var terms = {
             'ja': {
                 'calc_plugin_label': '計算式の設定',
-                'calc_plugin_description': '計算フィールドを指定て計算式を入力し、発火項目を指定すると、' +
-                '\r\n発火項目の値が変更されたタイミングで計算を行い、計算結果を計算フィールドに表示されます。',
-                'calc_object_field': '計算するフィールド',
+                'calc_plugin_description_1': '計算フィールドを指定て計算式を入力し、発火項目を指定すると、' +
+                '\r\n発火項目の値が変更されたタイミングで計算を行い、計算結果を計算フィールドに出力します。',
+                'calc_plugin_description_2': '入力できる式はeval()関数が扱えるものです。フィールドが含まれている場合、## ##で括って下さい。',
+                'calc_plugin_description_3':'例、フィールドAとフィールドBを掛け算して小数点以下第2位を四捨五入したい場合：',
+                'calc_plugin_description_4':'Math.Round(##Aフィールドコード##*##Bフィールドコード##*100)/100',
+                'calc_object_field': '計算フィールド',
                 'calc_expression': '計算式',
                 'calc_event_field': '発火項目',
                 'calc_submit': '保存',
@@ -27,22 +30,31 @@ jQuery.noConflict();
                 'calc_disable_checkbox': '編集不可にする'
             },
             'en': {
-                'calc_plugin_label': 'computation expression setting',
-                'calc_plugin_description': 'Select filed,ande input expression,and select trigger field。',
-                'calc_object_field': 'Calc filed',
-                'calc_expression': 'expression',
+                'calc_plugin_label': 'Formula Settings',
+                'calc_plugin_description_1': 'Select To be Calculated field, enter a formula for this field,then select Trigger field.' +
+                'Any change in Trigger field triggers the execution of the formula' +
+                'and the result is displayed in To be Calculated field.',
+                'calc_plugin_description_2': 'Any valid expression for EVAL() function maybe used as a formula.' +
+                'Please use ## ## to denote any field code in the formula.',
+                'calc_plugin_description_3': 'For example, to display the product of field A and field B rounded to 2 decimal,',
+                'calc_plugin_description_4': 'Math.Round(##field code A##*##field code B##*100)/100',
+                'calc_object_field': 'To be Calculated',
+                'calc_expression': 'Formula',
                 'calc_event_field': 'Trigger',
                 'calc_submit': 'Save',
                 'calc_cancel': 'Cancel',
-                'calc_disable_field': 'disable',
-                'calc_disable_checkbox': 'disable'
+                'calc_disable_field': 'Editability',
+                'calc_disable_checkbox': 'Disable'
             },
             'zh': {
                 'calc_plugin_label': '设置计算公式',
-                'calc_plugin_description': '在[计算字段]列选择要设置公式的字段，并输入公式，然后选择事件触发字段。当字段的值发生更改时，即触发事件，' +
-                '将根据计算公式进行计算，并将计算结果显示在[计算字段上]，同时可将此字段设为不可编辑。',
+                'calc_plugin_description_1': '选择[计算字段]，并输入公式，然后选择事件触发字段。当字段的值发生更改时，即触发事件，' +
+                '根据计算公式进行计算，并将计算结果显示在[计算字段]上。',
+                'calc_plugin_description_2': '可输入eval()函数可处理的公式。计算公式包含字段代码时，用## ##括起来。',
+                'calc_plugin_description_3':'比如，要计算"A字段"乘以"B字段"并四舍五入仅保留两位数时：',
+                'calc_plugin_description_4':'Math.Round(##A字段代码##*##B字段代码##*100)/100',
                 'calc_object_field': '计算字段',
-                'calc_expression': '公式',
+                'calc_expression': '计算公式',
                 'calc_event_field': '事件触发字段',
                 'calc_submit': '保存',
                 'calc_cancel': '取消',
@@ -120,8 +132,8 @@ jQuery.noConflict();
                 // delete existed setting
                 rowClone.find('input.checkbox').prop('checked', false);
                 rowClone.find('input.expression').val('');
-                for (; rowClone.find('tr.in-tr').length > 1;) {
-                    rowClone.find('tr.in-tr').last().remove();
+                while (rowClone.find('tr.in-tr').length > 1) {
+                   rowClone.find('tr.in-tr').last().remove();
                 }
                 $('.out-tr:eq(' + r + ')').after(rowClone);
             }
@@ -175,28 +187,28 @@ jQuery.noConflict();
 
         function setDropDown(resp) {
 
-            var fileds = [];
+            var fields = [];
             var normalFields = resp.properties;
-            fileds.push(normalFields);
+            fields.push(normalFields);
             var tableFieldCode = [];
 
             for (var fieldKey in normalFields) {
-                // Save normal-field and table-field to 'fileds' object
+                // Save normal-field and table-field to 'fields' object
                 if (!normalFields.hasOwnProperty(fieldKey)) {continue; }
                 var prop = normalFields[fieldKey];
                 if (prop.type === 'SUBTABLE') {
                     var fieldsInTable = normalFields[fieldKey].fields;
-                    fileds.push(fieldsInTable);
+                    fields.push(fieldsInTable);
                     tableFieldCode.push(prop.code);
                 }
             }
 
             // Create option and set to dropdown
             var $option = $('<option>');
-            for (var b = 0; b < fileds.length; b++) {
-                for (var key in fileds[b]) {
-                    if (!fileds[b].hasOwnProperty(key)) {continue; }
-                    var pr = fileds[b][key];
+            for (var b = 0; b < fields.length; b++) {
+                for (var key in fields[b]) {
+                    if (!fields[b].hasOwnProperty(key)) {continue; }
+                    var pr = fields[b][key];
                     switch (pr['type']) {
                         case 'SINGLE_LINE_TEXT':
                         case 'NUMBER':
@@ -245,7 +257,7 @@ jQuery.noConflict();
                     rowClone.find('select.eventField').val('');
                     rowClone.find('input.checkbox').prop('checked', false);
                     rowClone.find('textarea.expression').val('');
-                    for (; rowClone.find('tr.in-tr').length > 1;) {
+                    while (rowClone.find('tr.in-tr').length > 1) {
                         rowClone.find('tr.in-tr').last().remove();
                     }
 
@@ -273,27 +285,27 @@ jQuery.noConflict();
         }
 
 
-        function createErrorMessage(type, errorNum, rowNum_out, rowNum_in) {
+        function createErrorMessage(type, errorNum, rowNum_out) {
             var user_lang = kintone.getLoginUser().language;
             var error_messages = {
                 'ja': {
                     'row_data': {
-                        '1': rowNum_out + '行目の' + rowNum_in + '個目の計算フィールドを指定してください。',
-                        '2': rowNum_out + '行目の' + rowNum_in + '個目の計算式を入力してください',
+                        '1': rowNum_out + '行目に計算フィールドを指定していない行があります。',
+                        '2': rowNum_out + '行目に計算式を入力していない行があります。',
                         '3': rowNum_out + '行目の発火項目を指定してください'
                     }
                 },
                 'en': {
                     'row_data': {
-                        '1': 'Set the calc field for ' + rowNum_out + 'row.',
-                        '2': 'Set the expression field for ' + rowNum_out + 'row.',
-                        '3': 'Set the event field for ' + rowNum_out + 'row.'
+                        '1': 'To be Calculated field has not been selected on line' + rowNum_out,
+                        '2': 'Formula field has not been entered on line' + rowNum_out,
+                        '3': 'Trigger field has not been selected on line' + rowNum_out
                     }
                 },
                 'zh': {
                     'row_data': {
-                        '1': '第' + rowNum_out + '行的计算字段未指定。',
-                        '2': '第' + rowNum_out + '行的计算公式未输入。',
+                        '1': '第' + rowNum_out + '行有计算字段未指定。',
+                        '2': '第' + rowNum_out + '行有计算公式未输入。',
                         '3': '第' + rowNum_out + '行的事件字段未指定。'
                     }
                 }
@@ -308,19 +320,19 @@ jQuery.noConflict();
             for (var y = 0; y < row_data.length; y++) {
                 var eventField_length = row_data[y].eventField.length;
 
-                if (eventField_length === 0) {
-                    throw new Error(createErrorMessage('row_data', '1', y + 1));
-                }
-
                 for (var k = 0; k < Object.keys(row_data[y].inTable).length; k++) {
                     var CalcField = row_data[y].inTable[k][0];
                     var ex = row_data[y].inTable[k][2];
 
-                    if (eventField_length !== 0 && CalcField !== '' && ex === '') {
-                        throw new Error(createErrorMessage('row_data', '2', y + 1, k + 1));
+                    if (CalcField === '') {
+                        throw new Error(createErrorMessage('row_data', '1', y + 1));
                     }
-                    if (eventField_length !== 0 && CalcField === '' && ex !== '') {
-                        throw new Error(createErrorMessage('row_data', '3', y + 1, k + 1));
+
+                    if (CalcField !== '' && eventField_length !== 0 && ex === '') {
+                        throw new Error(createErrorMessage('row_data', '2', y + 1));
+                    }
+                    if (CalcField !== '' && eventField_length === 0 && ex !== '') {
+                        throw new Error(createErrorMessage('row_data', '3', y + 1));
                     }
                 }
             }
