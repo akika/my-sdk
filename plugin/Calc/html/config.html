@@ -1,0 +1,84 @@
+<div id="calc-plugin">
+    <div class="block calc-plugin-block">
+      <div class="kintoneplugin-label">{{html:terms.calc_plugin_label}}</div>
+
+        <div class="kintoneplugin-row">{{html:terms.calc_plugin_description}}</div>
+            <table class="kintoneplugin-table">
+                <thead>
+                    <tr>
+                        <th class="kintoneplugin-table-th" id="column1-title">
+                            <span class="title">{{html:terms.calc_object_field}}</span>
+                        </th>
+                        <th class="kintoneplugin-table-th" id="column2-title">
+                            <span class="title">{{html:terms.calc_disable_field}}</span>
+                        </th>
+                        <th class="kintoneplugin-table-th" id="column3-title">
+                            <span class="title">{{html:terms.calc_expression}}</span>
+                        </th>
+                        <th class="kintoneplugin-table-th">
+                            <span class="title">{{html:terms.calc_event_field}}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="out-table">
+                    <tr class="out-tr">
+                        <td colspan="3" class="table-column1">
+                            <table class="kintoneplugin-table in-table">
+                                <tbody id="in-table">
+                                <tr class="in-tr">
+                                    <td>
+                                        <div class="kintoneplugin-table-td-control">
+                                            <div class="kintoneplugin-table-td-control-value">
+                                                <div class="kintoneplugin-select-outer">
+                                                    <div class="kintoneplugin-select">
+                                                        <select class="object">
+                                                            <option value="" name="">-----</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="kintoneplugin-table-td-control">
+                                            <div class="kintoneplugin-table-td-control-value">
+                                                <input type="checkbox" name="checkbox" class="checkbox">
+                                                    {{html:terms.calc_disable_checkbox}}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="kintoneplugin-table-td-control">
+                                            <div class="kintoneplugin-table-td-control-value">
+                                                <div class="kintoneplugin-input-outer">
+                                                    <textarea class="kintoneplugin-input-text expression"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="kintoneplugin-table-td-operation in-table-column4">
+                                        <button type="button" class="kintoneplugin-button-add-row-image add in" title="Add row"></button>
+                                        <button type="button" class="kintoneplugin-button-remove-row-image remove-in" title="Delete this row"></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                         <td class="table-column2">
+                            <select class="eventField" multiple size="4">
+                            </select>
+                        </td>
+                        <td class="kintoneplugin-table-td-operation table-column3">
+                            <button type="button" class="kintoneplugin-button-add-row-image add out" title="Add row"></button>
+                            <button type="button" class="kintoneplugin-button-remove-row-image remove-out" title="Delete this row"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+    <div class="block">
+        <button class="kintoneplugin-button-dialog-ok" id="kintoneplugin-submit" type="button">{{html:terms.calc_submit}}</button>
+        <button class="kintoneplugin-button-dialog-cancel" id="kintoneplugin-cancel" type="button">{{html:terms.calc_cancel}}</button>
+    </div>
+</div>
