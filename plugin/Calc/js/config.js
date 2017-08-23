@@ -95,7 +95,7 @@ jQuery.noConflict();
                 $(target).height(target.scrollHeight);
             } else {
                 var lineHeight = Number($(target).css('lineHeight').split('px')[0]);
-                while (true) {
+                while (target.scrollHeight < target.offsetHeight) {
                     $(target).height($(target).height() - lineHeight);
                     if (target.scrollHeight > target.offsetHeight) {
                         $(target).height(target.scrollHeight);
@@ -327,6 +327,15 @@ jQuery.noConflict();
         }
 
 
+        function loopEventField(f) {
+            var eventFields = [];
+            $('tr.out-tr').eq(f).find('.eventField option:selected').each(function() {
+                eventFields.push($(this).val());
+            });
+            return eventFields;
+        }
+
+
         function setConfig() {
             var config = {};
             var CalcInfo = [];
@@ -335,10 +344,7 @@ jQuery.noConflict();
 
             for (var f = 0; f < rowNum_out; f++) {
                 CalcInfo[f] = {};
-                var eventField = [];
-                $('tr.out-tr').eq(f).find('.eventField option:selected').each(function() {
-                    eventField.push($(this).val());
-                });
+                var eventField = loopEventField(f);
                 CalcInfo[f].eventField = eventField;
                 CalcInfo[f].inTable = {};
 
