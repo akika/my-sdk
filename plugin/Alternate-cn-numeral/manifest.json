@@ -1,0 +1,37 @@
+{
+	"manifest_version": 1,
+	"version": 1,
+	"type": "APP",
+	"name": {
+		"ja": "漢数字の大字変換",
+		"en": "Alternate Chinese Numeral Plug-in",
+		"zh": "大写数字转换插件"
+	},
+	"description": {
+		"ja": "指定した数値を漢数字の大字へ変換するプラグインです。",
+		"en": "A plug-in that can convert numeral to Chinese Numeral.",
+		"zh": "本插件可将所指定的数值转换成大写数字。"
+	},
+	"icon": "image/icon.png",
+	"desktop": {
+		"js": [
+			"https://js.cybozu.com/jquery/2.1.4/jquery.min.js",
+			"js/desktop.js"
+		],
+		"css": [
+		]
+	},
+	"config": {
+		"html": "html/config.html",
+		"js": [
+			"https://js.cybozu.com/jquery/2.1.4/jquery.min.js",
+			"https://js.cybozu.com/jqueryui/1.11.4/jquery-ui.min.js",
+			"https://js.cybozu.com/jsrender/0.9.83/jsrender.min.js",
+			"js/config.js"
+		],
+		"css": [
+			"css/51-modern-default.css"
+		],
+		"required_params": ["resource","desplay"]
+	}
+}
