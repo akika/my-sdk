@@ -4,12 +4,12 @@
 	"type": "APP",
 	"name": {
 		"ja": "汎用的計算式プラグイン",
-		"en": "General expression plug-in",
-		"zh": "通用公式插件"
+		"en": "General Calculation Formula Plug-in",
+		"zh": "通用计算器插件"
 	},
 	"description": {
 		"ja": "フィールド毎に計算式を自由に設定できるプラグインです。",
-		"en": "Can set any expression for filed.",
+		"en": "A plug-in that allows users to enter multiple formulas and displays calculated results in correspondent fields.",
 		"zh": "本插件可给任意字段设置任意的计算公式。"
 	},
 	"icon": "image/icon.png",

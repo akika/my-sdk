@@ -17,7 +17,7 @@ jQuery.noConflict();
             'ja': {
                 'calc_plugin_label': '計算式の設定',
                 'calc_plugin_description_1': '計算フィールドを指定て計算式を入力し、発火項目を指定すると、' +
-                '\r\n発火項目の値が変更されたタイミングで計算を行い、計算結果を計算フィールドに出力します。',
+                '発火項目の値が変更されたタイミングで計算を行い、計算結果を計算フィールドに出力します。',
                 'calc_plugin_description_2': '入力できる式はeval()関数が扱えるものです。フィールドが含まれている場合、## ##で括って下さい。',
                 'calc_plugin_description_3':'例、フィールドAとフィールドBを掛け算して小数点以下第2位を四捨五入したい場合：',
                 'calc_plugin_description_4':'Math.Round(##Aフィールドコード##*##Bフィールドコード##*100)/100',
@@ -416,7 +416,6 @@ jQuery.noConflict();
         });
 
         setTableButtonAction();
-        // textareaResponsive();
 
     });
 })(jQuery, kintone.$PLUGIN_ID);

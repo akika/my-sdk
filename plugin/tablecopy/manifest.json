@@ -3,13 +3,13 @@
 	"version": 1,
 	"type": "APP",
 	"name": {
-		"ja": "アプリ間テーブルコピープラグイン",
-		"en": "Copy table between APPs plug-in",
-		"zh": "应用间表格复制插件"
+		"ja": "テーブルルックアッププラグイン",
+		"en": "Table lookup plug-in",
+		"zh": "表格lookup插件"
 	},
 	"description": {
 		"ja": "ルークアップ先アプリからデータをコピしてレコードを新規作成するプラグインです。",
-		"en": "It is plug-in which changes the color etc. of the item displayed according to conditions. ",
+		"en": "This plug-in enhances the lookup field to be able to copy Tables.",
 		"zh": "本插件可从lookup所参照的应用中复制数据，并用此数据创建新记录。"
 	},
 	"icon": "image/icon.png",
